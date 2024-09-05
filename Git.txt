@@ -11,8 +11,14 @@
    > git config --list
 7. 查詢git專案目錄目前狀態
    > git status
-8. 將專案目錄內的檔案加到git索引區
+*8. 將專案目錄內的檔案加到git索引區(檔案更新)
    > git add .
-9. 對專案目錄內檔案異動做文字註記
+*9. 將加到專案目錄內的檔案寫入本地repository, 同時做文字註記(檔案更新)
    > git commit -m "註記文字"
-
+10.查看git歷史紀錄
+   > git log
+11. 登入github網站"Create new...", 選擇"New repository"建立儲存區
+12. 本地終端執行下列指令, 上傳檔案(指令來自github網站repository)
+   > git remote add origin https://github.com/chinfu1004/first20240905.git
+   > git branch -M main
+   > git push -u origin main
