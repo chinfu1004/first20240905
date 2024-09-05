@@ -1,0 +1,18 @@
+1. 安裝Git程式
+2. 終端機登入, 切換到專案目錄
+3. 對專案目錄做初始化(每個專案目錄都要做初始化)
+   > git init
+4. 查看git版本
+   > git --version
+5. 設定個人資料(姓名/e-mail)
+   > git config --global user.name "git-name"
+   > git config --global user.email "git-Email"
+6. 查詢git設定內容
+   > git config --list
+7. 查詢git專案目錄目前狀態
+   > git status
+8. 將專案目錄內的檔案加到git索引區
+   > git add .
+9. 對專案目錄內檔案異動做文字註記
+   > git commit -m "註記文字"
+

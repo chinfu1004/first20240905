@@ -1,0 +1,175 @@
+docker 基本指令
+
+----- <<docker pull>>   ==> 抓取docker image最新檔案
+$ docker pull mysql:latest
+latest: Pulling from library/mysql
+6e839ac3722d: Pull complete
+ad912193ad5f: Pull complete
+25d13d87fd8d: Pull complete
+004d383c75ef: Pull complete
+6d9bbc82a0b8: Pull complete
+81fec07ea550: Pull complete
+83357cb2d3a5: Pull complete
+8ffe968b82c1: Pull complete
+30dfd9a7ed57: Pull complete
+35844ae33cbe: Pull complete
+Digest: sha256:86cdfe832c81e39a89cfb63c3fde1683c41cc00ef91e67653c9c1df0ba80f454
+Status: Downloaded newer image for mysql:latest
+docker.io/library/mysql:latest
+
+
+----- <<docker rmi image-name>>   ==> 刪除docker image檔案
+chinfu@2024MIS0819:~$ docker rmi mysql
+Untagged: mysql:latest
+Untagged: mysql@sha256:447a8665cc1dab95b1ca778e162215839ccbb9189104c79d7ec3a81e14577add
+Deleted: sha256:5ef79149e0ec84a7a9f9284c3f91aa3c20608f8391f5445eabe92ef07dbda03c
+Deleted: sha256:aa557aaf0b93b5b9af247beb198be89632444af2d52b37f2b67bdf2227194625
+Deleted: sha256:85dee7d6fa4b70eaa6b43b5dede5255b6794fac35d2aa6a80f8590dad223c1a6
+Deleted: sha256:9996f8429bfc2f1e10f561e17bdc0c66eb82e30088725fbdc634a774933ba066
+Deleted: sha256:d861b1c34411369feaaaf4921018baa607e89f1c393b8ed950f676dd3349b9ff
+Deleted: sha256:01b9716819d1d6863f886e1adcd8bb2bf936dcacb16e1750e873bfd8e1667014
+Deleted: sha256:8d8c7099ecd8343e6700c1d348211ab159c0eda2a9d318c5cf600a8eb2588f5e
+Deleted: sha256:9853575bc4f955c5892dd64187538a6cd02dba6968eba9201854876a7a257034
+chinfu@2024MIS0819:~$ docker image ls
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+
+
+----- <<docker images>>   ==> 查看本地docker image檔案
+$ docker images mysql:latest
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+mysql        latest    a82a8f162e18   5 weeks ago   586MB
+centos       latest    5d0da3dc9764   2 years ago   231MB
+
+
+----- <<docker run docker-imagefile images-command>>   ==> 執行docker images程式內的指令
+$ docker run centos echo "I am centos from docker..."   ==> 執行centos的指令
+I am centos from docker...
+$ docker run centos df   ==> 執行centos的指令
+Filesystem      1K-blocks    Used  Available Use% Mounted on
+overlay        1055762868 1936012 1000123384   1% /
+tmpfs               65536       0      65536   0% /dev
+tmpfs             3983968       0    3983968   0% /sys/fs/cgroup
+shm                 65536       0      65536   0% /dev/shm
+/dev/sdd       1055762868 1936012 1000123384   1% /etc/hosts
+tmpfs             3983968       0    3983968   0% /proc/acpi
+tmpfs             3983968       0    3983968   0% /sys/firmware
+
+
+----- <<docker run -it docker-imagefile /bin/sh>>   ==> 執行docker images程式內的shell指令, 加上-it (interactive)
+$ docker run -it centos /bin/sh
+sh-4.4# df -k   ==> 進到centos imagefile執行指令
+Filesystem      1K-blocks    Used  Available Use% Mounted on
+overlay        1055762868 1936140 1000123256   1% /
+tmpfs               65536       0      65536   0% /dev
+tmpfs             3983968       0    3983968   0% /sys/fs/cgroup
+shm                 65536       0      65536   0% /dev/shm
+/dev/sdd       1055762868 1936140 1000123256   1% /etc/hosts
+tmpfs             3983968       0    3983968   0% /proc/acpi
+tmpfs             3983968       0    3983968   0% /sys/firmware
+sh-4.4# pwd   ==> 進到centos imagefile執行指令
+/
+sh-4.4# exit   ==> 離開centos shell模式, 回到本機命令列
+exit
+$
+
+
+----- <<docker run -d -it centos /bin/sh>>   ==> "-d" 背景執行
+$ docker run -d -it centos /bin/sh
+055b17cf47a130285856707316e854bb4d1eb8122ada3988c95f14fe92ba10e2
+chinfu@2024MIS0819:~$ docker container ls   ==> 查看docker背景執行運行ID
+CONTAINER ID   IMAGE     COMMAND     CREATED         STATUS         PORTS     NAMES
+055b17cf47a1   centos    "/bin/sh"   5 seconds ago   Up 4 seconds             blissful_hertz
+chinfu@2024MIS0819:~$ docker exec -it 055b17cf47a1 /bin/sh   ==> 進入背景執行運行ID
+sh-4.4#
+
+
+----- <<docker container stop ID>>   ==> 中止背景(ID)執行(命令還是會存在, 只是沒有在運行)
+$ docker container ls   ==> 找出背景執行的ID
+CONTAINER ID   IMAGE     COMMAND     CREATED         STATUS         PORTS     NAMES
+055b17cf47a1   centos    "/bin/sh"   5 minutes ago   Up 5 minutes             blissful_hertz
+$ docker container stop 055b17cf47a1   ==> 停止背景執行
+055b17cf47a1
+$ docker container ls
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+$
+
+
+----- $ docker container ls -a   ==> 列出所有存在的container ID(包括沒有在運行)
+CONTAINER ID   IMAGE     COMMAND                  CREATED        STATUS                      PORTS     NAMES
+055b17cf47a1   centos    "/bin/sh"                16 hours ago   Exited (0) 16 hours ago               blissful_hertz
+880a5547a19b   centos    "/bin/sh"                16 hours ago   Exited (0) 16 hours ago               priceless_lalande
+11315ad96223   centos    "df"                     16 hours ago   Exited (0) 16 hours ago               zen_tesla
+77fde02c165a   centos    "echo 'I am centos f…"   16 hours ago   Exited (0) 16 hours ago               amazing_khayyam
+318a9b8b5828   centos    "ping google.com"        20 hours ago   Exited (0) 20 hours ago               quirky_archimedes
+5d680bbd2040   centos    "/bin/bash"              20 hours ago   Exited (127) 20 hours ago             nifty_hertz
+
+
+----- <<docker container rm ID>>   ==> 刪除背景命令(ID)
+$ docker container rm 055b17cf47a1
+055b17cf47a1
+
+
+----- <<docker rmi image-name>>   ==> 刪除指定的docker image
+$ docker images   ==> 
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+mysql        latest    a82a8f162e18   5 weeks ago   586MB
+centos       latest    5d0da3dc9764   2 years ago   231MB
+
+----- docker rmi mysql   ==> 刪除mysql image
+Untagged: mysql:latest
+Untagged: mysql@sha256:86cdfe832c81e39a89cfb63c3fde1683c41cc00ef91e67653c9c1df0ba80f454
+Deleted: sha256:a82a8f162e188e0df15b0d2d90c6e9e973af8e88a6cb74b8052122ae5e02325c
+Deleted: sha256:5da6d4af0083ef5a3c34a897318f812bf2287df1d20324662bb462d9adc9a9f4
+Deleted: sha256:c2517597cb75237e131a560ff4fd06b26b9bbe2dc84351258385d20f6bb3d141
+Deleted: sha256:87392ed73e360ff3cdf9cf6f83da99054fa43703d9c68e8ee1cb908defa6c27b
+Deleted: sha256:652f8d3f70cb386cbaa61ed1dd578b6485ca5f5bea8dceedd02176657a57d700
+Deleted: sha256:aeb66573c46a113dc637070d9b6e5ad1af5a9629c706271013b658a04532c643
+Deleted: sha256:c103d3c7862eec5cfc0aa42df27e8ef2e441467c94a64e282d44171245497c33
+Deleted: sha256:bfee82506d3915fd33091e987014bf0fa4fb5079b2c64f8c4c82cf9289b87096
+Deleted: sha256:f829026b115edfb645697aa370a1dff76055ace8a213d83e559f65699d9555ce
+Deleted: sha256:28ff378667a9659a8bafabb2a3cca8d125c66c1cd7f1e8ca2797cbf83e511960
+Deleted: sha256:3cf436755aff907c2c6a6fd9202eab0da03f0b331f8d1363078a6534d95608a0
+$
+
+
+----- Dockerfile ----------
+1. nano Dockerfile   ==> 編寫一個Dockerfile
+FROM centos:latest   ==> 選擇docker image
+RUN apk --update and apache2   ==> 執行apk安裝apache2
+RUN rm -rf /var/cache/apk/*   ==> 清除cache暫存檔
+ENTRYPOINT ["httpd", "-D", "FOREGROUND"]   ==> ENTRYPOINT設定預設執行指令
+
+2. $ docker build -t myimage .   ==> 製作一個名為myimage的docker image
+[+] Building 0.3s (6/6) FINISHED                                                                         docker:default
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 126B                                                                               0.0s
+ => [internal] load metadata for docker.io/library/centos:latest                                                   0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => CACHED [1/2] FROM docker.io/library/centos:latest                                                              0.0s
+ => [2/2] RUN rm -rf /var/cache/apk/*                                                                              0.2s
+ => exporting to image                                                                                             0.0s
+ => => exporting layers                                                                                            0.0s
+ => => writing image sha256:658a423652f2c464ea7632872a9c89efb52c81191ee4196ba8d916aed2b3a1dc                       0.0s
+ => => naming to docker.io/library/myimage                                                                         0.0s
+
+3. $ docker images   ==> 檢查所有的images(查看是否有生成新的image)
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+myimage      latest    658a423652f2   35 seconds ago   231MB
+centos       latest    5d0da3dc9764   2 years ago      231MB
+
+4. $ docker run -d -p 80:80 myimage   ==> 執行myimage(httpd), -d:背景執行, -p:port對應(本機:docker image)
+
+
+
+
+
+
+
+
+
+
+
+
+
+

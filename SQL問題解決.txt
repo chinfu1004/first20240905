@@ -1,0 +1,10 @@
+今日倒資料庫時明明沒動到正式資料庫，卻出現"正在還原中..."的情況
+-- 解除資料庫鎖定
+use master
+restore database 資料庫名稱 with recovery
+
+-- 資料庫重新整理後, 檢查是否ONLINE
+SELECT state_desc FROM sys.databases WHERE name='資料庫名稱'
+
+
+
